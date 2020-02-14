@@ -47,6 +47,8 @@ public class StudioApp {
 
     public static void main(String[] args) throws Exception {
 
+        System.out.println("##toni here you go 1!");
+
         parseArguments(args);
 
         prepareRunningFromSingleJar();

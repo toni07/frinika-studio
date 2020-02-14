@@ -64,7 +64,9 @@ Linux users:
 Start Jack before launching Frinika and setup audio to use it
 
 Mac OSX (warning: Sometimes using this option causes a terrible noise,  
-so turn the volume down before launching. If it happens, try restarting):
+so turn the volume down before launching. If it happens, try restarting)
+(warning 2: VSTs wil not work (yet) on x64 architectures):
+(*big warning* 3: You will not be able to record audio sound with OSXAudioServer):
 java -DuseOSXAudioServer=true -jar frinika-studio.jar
 
 Structure

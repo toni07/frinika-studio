@@ -48,6 +48,7 @@ import uk.org.toot.audio.server.IOAudioProcess;
  */
 public class OSXAudioServer extends AbstractAudioServer implements ExtendedAudioServer {
 
+    private static final Logger logger = Logger.getLogger(OSXAudioServer.class.getName());
     AudioBuffer audioOut;
     boolean running = false;
 
@@ -143,7 +144,9 @@ public class OSXAudioServer extends AbstractAudioServer implements ExtendedAudio
     }
 
     @Override
-    public List<String> getAvailableInputNames() {
+    public List<String> getAvailableInputNames()
+    {
+        logger.severe("getAvailableInputNames is not implemented for OSXAudioServer");
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -24,20 +24,24 @@
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.audio.gui.ListProvider;
+import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.sequencer.gui.PopupClient;
 import com.frinika.sequencer.gui.PopupSelectorButton;
 import com.frinika.sequencer.model.AudioLane;
 import java.awt.Dimension;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import uk.org.toot.audio.core.AudioProcess;
 
-public class AudioLaneView extends LaneView {
-
+public class AudioLaneView extends LaneView
+{
+    private static final Logger logger = Logger.getLogger(AudioLaneView.class.getName());
     AudioProcess audioIn;
-    String name = "null";
+    String name = "... Choose input ...";
 
     public AudioLaneView(AudioLane lane) {
         super(lane);
@@ -63,6 +67,7 @@ public class AudioLaneView extends LaneView {
 
         // Device selector
         // ------------------------------------------------------------------------------------
+        final FrinikaAudioServer currentlyRunningAudioServer = FrinikaAudioSystem.getAudioServer();
         ListProvider resource = new ListProvider() {
             @Override
             public Object[] getList() {
@@ -70,7 +75,9 @@ public class AudioLaneView extends LaneView {
 //				Vector<AudioDeviceHandle> vec = AudioHub.getAudioInHandles();
 //				AudioDeviceHandle list[] = new AudioDeviceHandle[vec.size()];
 //				list=vec.toArray(list);
-                List<String> vec = FrinikaAudioSystem.getAudioServer().getAvailableInputNames();
+                logger.log(Level.INFO, "Currently running audio server: ", currentlyRunningAudioServer);
+                List<String> vec = currentlyRunningAudioServer.getAvailableInputNames();
+                logger.log(Level.INFO, "Available audio inputs: ", vec);
                 String list[] = new String[vec.size()];
                 list = vec.toArray(list);
 
@@ -87,18 +94,18 @@ public class AudioLaneView extends LaneView {
             public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
                 AudioProcess in;
                 try {
-                    in = FrinikaAudioSystem.getAudioServer().openAudioInput((String) o, null);
+                    in = currentlyRunningAudioServer.openAudioInput((String) o, null);
                     ((AudioLane) lane).setAudioInDevice(in);
                     name = (String) o;
                     if (in != audioIn) {
                         init();
                     }
 
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
-
+                catch (Exception e)
+                {
+                    logger.log(Level.SEVERE, "Error: ", e);
+                }
             }
         };
 

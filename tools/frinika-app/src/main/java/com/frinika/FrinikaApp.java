@@ -44,8 +44,11 @@ import javax.annotation.Nonnull;
 public class FrinikaApp {
 
     private static String argProjectFile = null;
+    private static final Logger logger = Logger.getLogger(FrinikaApp.class.getName());
 
     public static void main(String[] args) throws Exception {
+
+        System.out.println("##toni here you go 0!");
 
         parseArguments(args);
 
@@ -62,6 +65,7 @@ public class FrinikaApp {
     public static void configureUI() {
 // TODO        String lcOSName = System.getProperty("os.name").toLowerCase();
 
+        logger.log(Level.INFO, "configureUI INIT");
         String theme = FrinikaGlobalProperties.THEME.getValue();
         SupportedLaf selectedLaf = SupportedLaf.DEFAULT;
         if (theme != null) {
@@ -72,6 +76,7 @@ public class FrinikaApp {
             }
         }
         WindowUtils.switchLookAndFeel(selectedLaf);
+        logger.log(Level.INFO, "configureUI END");
     }
 
     private static void loadProperties() {
@@ -79,7 +84,7 @@ public class FrinikaApp {
         try {
             FrinikaConfig.load();
         } catch (IOException ex) {
-            Logger.getLogger(FrinikaApp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -108,7 +113,7 @@ public class FrinikaApp {
                         System.setProperty("java.library.path", tmp);
                     } catch (IOException ioe) {
                         System.err.println("Native library extraction failed. Problems may occur.");
-                        Logger.getLogger(FrinikaApp.class.getName()).log(Level.SEVERE, null, ioe);
+                        logger.log(Level.SEVERE, null, ioe);
                     }
                 }
             }

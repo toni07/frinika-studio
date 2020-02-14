@@ -57,10 +57,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.sound.midi.Sequence;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+
 import uk.org.toot.audio.server.AudioServerServices;
 import uk.org.toot.audio.server.TootAudioServerServiceProvider;
 import uk.org.toot.audio.server.spi.AudioServerServiceProvider;
@@ -74,6 +72,7 @@ public class FrinikaMain {
 
     private static final String DOWNLOAD_PATH_PREFIX = "http://sourceforge.net/projects/frinika/files/frinika-example-projects/Frinka-example-projects/";
     private static final String DOWNLOAD_PATH_POSTFIX = "/download";
+    private static final Logger logger = Logger.getLogger(FrinikaMain.class.getName());
 
     private final FrinikaExitHandler exitHook = new FrinikaExitHandler();
     private final List<ProjectFocusListener> projectFocusListeners = new ArrayList<>();
@@ -105,21 +104,15 @@ public class FrinikaMain {
             FrinikaAudioSystem.installClient(project.getAudioClient());
         });
 
-        // TODO: This is generally bad approach to depend on deprecated / internal classes
-        if (audioServicesScanCapable()) {
-            // Java version up to 1.8
-            AudioServerServices.scan();
-        } else {
-            // Workaround for SPI error in Java 9 and newer
-            List<AudioServerServiceProvider> providers = new ArrayList<>();
-            providers.add(new FrinikaAudioServerServiceProvider());
-            providers.add(new TootAudioServerServiceProvider());
-            providers.add(new AsioAudioServerServiceProvider());
-            providers.add(new JackTootAudioServerServiceProvider());
-            providers.add(new OSXAudioServerServiceProvider());
-            providers.add(new DummyAudioServerServiceProvider());
-            AudioServerServices.forceProviders(providers);
-        }
+        // Workaround for SPI error in Java 9 and newer
+        List<AudioServerServiceProvider> providers = new ArrayList<>();
+        providers.add(new FrinikaAudioServerServiceProvider());
+        providers.add(new TootAudioServerServiceProvider());
+        providers.add(new AsioAudioServerServiceProvider());
+        providers.add(new JackTootAudioServerServiceProvider());
+        providers.add(new OSXAudioServerServiceProvider());
+        providers.add(new DummyAudioServerServiceProvider());
+        AudioServerServices.forceProviders(providers);
 
         FrinikaAudioSystem.getAudioServer().start();
 
@@ -129,11 +122,12 @@ public class FrinikaMain {
                 FrinikaFrame newFrame = new FrinikaFrame();
                 newFrame.setProject(newProject);
             } catch (Exception ex) {
-                Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         });
 
         if (argProjectFile != null) {
+            logger.info("##toni startFrinika p1");
             try {
                 OpenProjectAction openProjectAction = new OpenProjectAction(welcomeFrame);
                 openProjectAction.openProjectFile(new File(argProjectFile));
@@ -141,7 +135,19 @@ public class FrinikaMain {
                 Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            getWelcomeFrameInstance().setVisible(true);
+            logger.info("##toni startFrinika frame init");
+            JFrame jFrame = getWelcomeFrameInstance();
+            jFrame.setVisible(true);
+            logger.info("##toni startFrinika frame should be visible");
+        }
+    }
+
+    private void sleep()
+    {
+        try {
+            Thread.sleep(3_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -193,6 +199,9 @@ public class FrinikaMain {
 
             welcomePanel = new WelcomePanel();
             setupWelcomePanel();
+
+            sleep(); //TODO: understand concurrency problem here, why do we have to do this?
+
             WindowUtils.initWindowByComponent(welcomeFrame, welcomePanel);
             WindowUtils.setWindowCenterPosition(welcomeFrame);
             welcomeFrame.addWindowListener(welcomePanel.getWindowListener());
