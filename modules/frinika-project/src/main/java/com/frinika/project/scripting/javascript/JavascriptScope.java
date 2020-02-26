@@ -396,10 +396,9 @@ public class JavascriptScope extends ScriptableObject {
     public static final int TYPE_UNKNOWN = 1;
 
     public static final int TYPE_MIDI = 1;
-
     public static final int TYPE_AUDIO = 2;
-
     public static final int TYPE_TEXT = 4;
+    public static final int TYPE_TRIGGER_SOUND = 5;
 
     private static final String TEXT_DELIM = "\n---\n";
 
@@ -456,6 +455,7 @@ public class JavascriptScope extends ScriptableObject {
         exportField("MIDI", TYPE_MIDI);
         exportField("AUDIO", TYPE_AUDIO);
         exportField("TEXT", TYPE_TEXT);
+        exportField("TRIGGER_SOUND", TYPE_TRIGGER_SOUND);
 
         exportMethod("print", new Class[]{String.class});
         exportMethod("println", new Class[]{String.class});
@@ -663,6 +663,8 @@ public class JavascriptScope extends ScriptableObject {
             return TYPE_AUDIO;
         } else if (name.equalsIgnoreCase("Text")) {
             return TYPE_TEXT;
+        } else if (name.equalsIgnoreCase("Trigger")) {
+            return TYPE_TRIGGER_SOUND;
         } else {
             return TYPE_UNKNOWN;
         }
@@ -676,6 +678,8 @@ public class JavascriptScope extends ScriptableObject {
                 return "Audio";
             case TYPE_TEXT:
                 return "Text";
+            case TYPE_TRIGGER_SOUND:
+                return "Trigger";
             default:
                 return null;
         }
@@ -689,7 +693,7 @@ public class JavascriptScope extends ScriptableObject {
         return MidiStepRecordAction.formatNote(note);
     }
 
-    public String fileRead(String filename) {
+    public static String fileRead(String filename) {
         try {
             StringBuffer sb;
             try (FileReader in = new FileReader(filename)) {
@@ -736,9 +740,6 @@ public class JavascriptScope extends ScriptableObject {
         return file.delete();
     }
 
-    /*public int shellExecute(String command) {
-		
-	}*/
     public void panic() {
         project.getSequencer().panic();
     }
@@ -786,24 +787,6 @@ public class JavascriptScope extends ScriptableObject {
 
         public Object[] getMidiLanes() {
             return (new Converter(p.getLanes(), MidiLane.class) {
-                @Override
-                protected Object createWrapper(Object o) {
-                    return new Lane((com.frinika.sequencer.model.Lane) o);
-                }
-            }).toArray();
-        }
-
-        public Object[] getAudioLanes() {
-            return (new Converter(p.getLanes(), AudioLane.class) {
-                @Override
-                protected Object createWrapper(Object o) {
-                    return new Lane((com.frinika.sequencer.model.Lane) o);
-                }
-            }).toArray();
-        }
-
-        public Object[] getTextLanes() {
-            return (new Converter(p.getLanes(), TextLane.class) {
                 @Override
                 protected Object createWrapper(Object o) {
                     return new Lane((com.frinika.sequencer.model.Lane) o);
@@ -978,8 +961,13 @@ public class JavascriptScope extends ScriptableObject {
                     project.getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.add_text_lane"));
                     lane = project.createTextLane();
                     break;
+                case TYPE_TRIGGER_SOUND:
+                    //(new CreateTextLaneAction(frame)).actionPerformed(null);
+                    project.getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.add_trigger_sound_track"));
+                    lane = project.createTriggerSoundTrack();
+                    break;
                 default:
-                    throw new IllegalStateException("cannot create new lane, unknown type " + type);
+                    throw new IllegalStateException("cannot create new track, unknown type " + type);
 
                 // WAS 
                 // project.error();

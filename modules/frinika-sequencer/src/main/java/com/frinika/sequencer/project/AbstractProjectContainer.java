@@ -43,15 +43,7 @@ import com.frinika.sequencer.gui.selection.MidiSelection;
 import com.frinika.sequencer.gui.selection.MultiEventSelection;
 import com.frinika.sequencer.gui.selection.PartSelection;
 import com.frinika.sequencer.gui.selection.SelectionFocusable;
-import com.frinika.sequencer.model.AudioLane;
-import com.frinika.sequencer.model.Lane;
-import com.frinika.sequencer.model.MidiLane;
-import com.frinika.sequencer.model.MidiPart;
-import com.frinika.sequencer.model.ProjectLane;
-import com.frinika.sequencer.model.SoloManager;
-import com.frinika.sequencer.model.SynthLane;
-import com.frinika.sequencer.model.TextLane;
-import com.frinika.sequencer.model.ViewableLaneList;
+import com.frinika.sequencer.model.*;
 import com.frinika.sequencer.model.tempo.TempoList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList;
 import com.frinika.sequencer.model.util.TimeUtils;
@@ -154,6 +146,8 @@ public abstract class AbstractProjectContainer implements EditHistoryProvider,
     public abstract AudioLane createAudioLane();
 
     public abstract TextLane createTextLane();
+
+    public abstract TriggerSoundTrack createTriggerSoundTrack();
 
     public abstract SoloManager getSoloManager();
 

@@ -23,6 +23,7 @@
  */
 package com.frinika.project;
 
+import com.frinika.sequencer.model.*;
 import com.frinika.tools.ProgressObserver;
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.io.BufferedRandomAccessFileManager;
@@ -56,17 +57,6 @@ import com.frinika.sequencer.midi.DrumMapper;
 import com.frinika.drummapper.DrumMapperGUI;
 import com.frinika.sequencer.gui.partview.PartView;
 import com.frinika.sequencer.gui.pianoroll.PianoRoll;
-import com.frinika.sequencer.model.AudioLane;
-import com.frinika.sequencer.model.Lane;
-import com.frinika.sequencer.model.MidiLane;
-import com.frinika.sequencer.model.MidiPart;
-import com.frinika.sequencer.model.MultiEvent;
-import com.frinika.sequencer.model.Part;
-import com.frinika.sequencer.model.ProjectLane;
-import com.frinika.sequencer.model.RecordableLane;
-import com.frinika.sequencer.model.SoloManager;
-import com.frinika.sequencer.model.SynthLane;
-import com.frinika.sequencer.model.TextLane;
 import com.frinika.sequencer.model.tempo.TempoList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList.TimeSignatureEvent;
@@ -1183,6 +1173,13 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
     @Override
     public TextLane createTextLane() { // Jens
         TextLane lane = new TextLane(this);
+        add(lane);
+        return lane;
+    }
+
+    @Override
+    public TriggerSoundTrack createTriggerSoundTrack() {
+        TriggerSoundTrack lane = new TriggerSoundTrack(this);
         add(lane);
         return lane;
     }

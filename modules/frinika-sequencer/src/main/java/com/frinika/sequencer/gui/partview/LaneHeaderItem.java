@@ -2,16 +2,8 @@ package com.frinika.sequencer.gui.partview;
 
 import com.frinika.audio.gui.MeterPanel;
 import static com.frinika.localization.CurrentLocale.getMessage;
-import com.frinika.sequencer.model.AudioLane;
-import com.frinika.sequencer.model.Lane;
-import com.frinika.sequencer.model.MenuPlugable;
-import com.frinika.sequencer.model.MenuPlugin;
-import com.frinika.sequencer.model.MidiLane;
-import com.frinika.sequencer.model.ProjectLane;
-import com.frinika.sequencer.model.RecordableLane;
-import com.frinika.sequencer.model.SoloManager;
-import com.frinika.sequencer.model.SynthLane;
-import com.frinika.sequencer.model.TextLane;
+
+import com.frinika.sequencer.model.*;
 import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -113,7 +105,15 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
                 al.getMixerControls().getSoloControl().addObserver(this);
                 al.getMixerControls().getMuteControl().addObserver(this);
             }
-        } else {
+        }
+        else if (lane instanceof TriggerSoundTrack)
+        {
+            voiceView = new TriggerSoundTrackView((TriggerSoundTrack) lane);
+            TriggerSoundTrack al = ((TriggerSoundTrack) lane);
+            al.getMixerControls().getSoloControl().addObserver(this);
+            al.getMixerControls().getMuteControl().addObserver(this);
+        }
+        else {
             voiceView = new LaneView(lane);
         }
 

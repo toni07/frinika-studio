@@ -59,25 +59,7 @@ import com.frinika.radio.LocalOGGHttpRadio;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.gui.GlobalToolBar;
 import com.frinika.sequencer.gui.ProjectFrame;
-import com.frinika.sequencer.gui.menu.CreateAudioLaneAction;
-import com.frinika.sequencer.gui.menu.CreateMidiDrumLaneAction;
-import com.frinika.sequencer.gui.menu.CreateMidiLaneAction;
-import com.frinika.sequencer.gui.menu.CreateTextLaneAction;
-import com.frinika.sequencer.gui.menu.CutPasteMenu;
-import com.frinika.sequencer.gui.menu.DisplayStructureAction;
-import com.frinika.sequencer.gui.menu.GuiCursorUpdateMenu;
-import com.frinika.sequencer.gui.menu.ImportAudioAction;
-import com.frinika.sequencer.gui.menu.ImportMidiToLaneAction;
-import com.frinika.sequencer.gui.menu.MidiIMonitorAction;
-import com.frinika.sequencer.gui.menu.MidiInSetupAction;
-import com.frinika.sequencer.gui.menu.RepeatAction;
-import com.frinika.sequencer.gui.menu.SetAudioOutputAction;
-import com.frinika.sequencer.gui.menu.SplitSelectedPartsAction;
-import com.frinika.sequencer.gui.menu.TempoListEditAction;
-import com.frinika.sequencer.gui.menu.TimeSignatureEditAction;
-import com.frinika.sequencer.gui.menu.ToggleShowVoiceViewAction;
-import com.frinika.sequencer.gui.menu.WarpToLeftAction;
-import com.frinika.sequencer.gui.menu.WarpToRightAction;
+import com.frinika.sequencer.gui.menu.*;
 import com.frinika.sequencer.gui.menu.midi.GroovePatternCreateFromMidiPartAction;
 import com.frinika.sequencer.gui.menu.midi.GroovePatternManagerAction;
 import com.frinika.sequencer.gui.menu.midi.MidiDurationAction;
@@ -1887,6 +1869,13 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 | KeyEvent.SHIFT_MASK));
         editMenu.add(item);
 
+        item = new JMenuItem(new CreateTriggerSoundTrackAction(this));
+        item.setIcon(getIconResource("new_track_audio.gif"));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit
+                .getDefaultToolkit().getMenuShortcutKeyMask()
+                | KeyEvent.SHIFT_MASK));
+        editMenu.add(item);
+
         // item = new JMenuItem(new CreateXAudioLaneAction(this));
         // item.setIcon(getIconResource("new_track_audio.gif"));
         // item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Toolkit
@@ -1922,7 +1911,17 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 .getDefaultToolkit().getMenuShortcutKeyMask()
                 | KeyEvent.SHIFT_MASK));
         newLaneMenu.add(item);
+
         item = new JMenuItem(new CreateTextLaneAction(this)); // Jens
+        item.setIcon(getIconResource("new_track_text.gif"));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, Toolkit
+                .getDefaultToolkit().getMenuShortcutKeyMask()
+                | KeyEvent.SHIFT_MASK));
+        newLaneMenu.add(item);
+        newLaneMenu.addSeparator();
+        newLaneMenu.add(newDeviceMenu());
+
+        item = new JMenuItem(new CreateTriggerSoundTrackAction(this));
         item.setIcon(getIconResource("new_track_text.gif"));
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, Toolkit
                 .getDefaultToolkit().getMenuShortcutKeyMask()
