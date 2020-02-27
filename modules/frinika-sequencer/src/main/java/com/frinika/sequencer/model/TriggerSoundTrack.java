@@ -101,10 +101,11 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
             public int processAudio(AudioBuffer buffer) {
                 // Process audio of all parts in this lane
                 // do we need to zero the buffer here ?
-
+                //toni07 this byteBuffer contains the data this has just been heard
+                System.out.println("processAudio 0");
                 if (armed)
                 {
-                    logger.info("processAudio 1");
+                    System.out.println("processAudio 1");
                     audioInProcess.processAudio(buffer);
                     peakMonitor.processAudio(buffer);
                     if (audioInsert != null) {
@@ -121,6 +122,7 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
                 }
                 else
                 {
+                    System.out.println("processAudio 1 not armed");
                     if (frinikaProject.getSequencer().isRunning()) {
                         buffer.setChannelFormat(ChannelFormat.STEREO);
                         buffer.makeSilence();
@@ -301,8 +303,8 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     /**
      * Creates a new audio file handle to save a clip.
      */
-    public AudioWriter newAudioWriter() {
-
+    public AudioWriter newAudioWriter()
+    {
         clipFile = newFilename();
 
         AudioFormat format = new AudioFormat(

@@ -72,8 +72,10 @@ public class AudioWriter extends BasicAudioWriter implements AudioProcess {
         float[] right;
 
         // Correct byte buffer size
-        if (byteBuffer == null
-                || byteBuffer.length != buffer.getSampleCount() * 2 * nChannel) {
+        if (
+                byteBuffer == null ||
+                byteBuffer.length != buffer.getSampleCount() * 2 * nChannel
+        ) {
             byteBuffer = new byte[buffer.getSampleCount() * 2 * nChannel];
         }
 
@@ -81,7 +83,8 @@ public class AudioWriter extends BasicAudioWriter implements AudioProcess {
         // Decode byte data and insert into voiceserver buffer
         int count = 0;
 
-        if (nChannel == 2) {
+        if (nChannel == 2)
+        {
             left = buffer.getChannel(0);
             right = buffer.getChannel(1);
 
@@ -93,8 +96,8 @@ public class AudioWriter extends BasicAudioWriter implements AudioProcess {
                 byteBuffer[count++] = (byte) (0xff & rightI);
                 byteBuffer[count++] = (byte) (0xff & (rightI >> 8));
             }
-        } else {
-
+        }
+        else {
             left = buffer.getChannel(0);
             for (int n = 0; n < nSamp; n++) {
                 short leftI = (short) (left[n] * 32768f);
@@ -102,7 +105,9 @@ public class AudioWriter extends BasicAudioWriter implements AudioProcess {
                 byteBuffer[count++] = (byte) (0xff & (leftI >> 8));
             }
         }
+
         try {
+            //toni07 this byteBuffer contains the data this has just been heard
             write(byteBuffer, 0, count);
         } catch (IOException e) {
             // TODO Auto-generated catch block
