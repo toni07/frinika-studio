@@ -1324,7 +1324,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
      */
     @Override
     public ProjectLane getProjectLane() {
-        return projectLane;
+        return projectLane; //toni07
     }
 
     public SynthRack getSynthRack() {

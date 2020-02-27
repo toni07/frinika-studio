@@ -173,6 +173,11 @@ public class SoloManager {
                             ((RecordableLane) l).setMute(true);
                         }
                     }
+                    else if (l instanceof TriggerSoundTrack) {
+                        if (!soloed.contains(l)) {
+                            ((RecordableLane) l).setMute(true);
+                        }
+                    }
 
                 } else {
                     ((RecordableLane) l).setMute(false);

@@ -31,7 +31,7 @@ import static com.frinika.localization.CurrentLocale.getMessage;
 
 public class CreateTriggerSoundTrackAction extends AbstractAction {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 13409758L;
     private ProjectFrame project;
 
     public CreateTriggerSoundTrackAction(ProjectFrame project) {

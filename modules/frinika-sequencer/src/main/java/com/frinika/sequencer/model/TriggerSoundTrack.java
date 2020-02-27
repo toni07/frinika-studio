@@ -10,6 +10,7 @@ import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SequencerListener;
+import com.frinika.sequencer.gui.partview.TriggerSoundTrackView;
 import com.frinika.sequencer.project.AbstractProjectContainer;
 import rasmus.midi.provider.RasmusSynthesizer;
 import uk.org.toot.audio.core.AudioBuffer;
@@ -25,10 +26,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.logging.Logger;
 
 public class TriggerSoundTrack extends Lane implements RecordableLane,
         SequencerListener {
 
+    private static final Logger logger = Logger.getLogger(TriggerSoundTrack.class.getName());
     transient AudioProcess audioInProcess = null; // audio input
     protected transient AudioProcess audioInsert = null;
     static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class
@@ -67,7 +70,7 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     static int nameCount = 0;
 
     public TriggerSoundTrack(AbstractProjectContainer project) {
-        super("Audio " + nameCount++, project);
+        super("Trigger " + nameCount++, project);
         attachAudioProcessToMixer();
     }
 
@@ -99,7 +102,9 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
                 // Process audio of all parts in this lane
                 // do we need to zero the buffer here ?
 
-                if (armed) {
+                if (armed)
+                {
+                    logger.info("processAudio 1");
                     audioInProcess.processAudio(buffer);
                     peakMonitor.processAudio(buffer);
                     if (audioInsert != null) {
@@ -113,7 +118,9 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
                     if (FrinikaGlobalProperties.DIRECT_MONITORING.getValue()) {
                         buffer.makeSilence();
                     }
-                } else {
+                }
+                else
+                {
                     if (frinikaProject.getSequencer().isRunning()) {
                         buffer.setChannelFormat(ChannelFormat.STEREO);
                         buffer.makeSilence();
@@ -178,7 +185,8 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     }
 
     @Override
-    public void setRecording(boolean b) {
+    public void setRecording(boolean b)
+    {
         if (b && audioInProcess == null) {
             armed = false;
             frinikaProject.getMessageHandler().message(CurrentLocale.getMessage("recording.please_select_audio_input"));
@@ -198,7 +206,8 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     }
 
     private void readObject(ObjectInputStream in)
-            throws ClassNotFoundException, IOException {
+            throws ClassNotFoundException, IOException
+    {
         in.defaultReadObject();
 
         // attachAudioProcessToMixer
@@ -214,11 +223,14 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
             }
 
             @Override
-            public int processAudio(AudioBuffer buffer) {
+            public int processAudio(AudioBuffer buffer)
+            {
                 // Process audio of all parts in this lane
                 // do we need to zero the buffer here ?
 
-                if (armed) {
+                if (armed)
+                {
+                    logger.info("processAudio 2");
                     audioInProcess.processAudio(buffer);
                     peakMonitor.processAudio(buffer);
                     if (audioInsert != null) {
@@ -232,7 +244,9 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
                     if (FrinikaGlobalProperties.DIRECT_MONITORING.getValue()) {
                         buffer.makeSilence();
                     }
-                } else {
+                }
+                else
+                {
                     if (frinikaProject.getSequencer().isRunning()) {
                         buffer.setChannelFormat(ChannelFormat.STEREO);
                         buffer.makeSilence();
@@ -328,7 +342,8 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     }
 
     @Override
-    public void start() {
+    public void start()
+    {
         isRecording = frinikaProject.getSequencer().isRecording();
         if (isRecording) {
             recordStartTimeInMicros = sequencer.getMicrosecondPosition();
@@ -336,9 +351,11 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
         isRecording = false;
-        if (hasRecorded) {
+        if (hasRecorded)
+        {
             frinikaProject.getEditHistoryContainer().mark(
                     CurrentLocale.getMessage("sequencer.audiolane.record"));
 
@@ -354,7 +371,7 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
             // shift record time back in time because we play along with a delay
             // output.
             recordStartTimeInMicros -= latencyInMicros;
-            // TODO Latency compensation
+            // TODO Latency compensation (toni07)
             AudioPart part;
             try {
                 part = new AudioPart(this, writer.getFile(),
@@ -375,10 +392,14 @@ public class TriggerSoundTrack extends Lane implements RecordableLane,
     }
 
     @Override
-    public Part createPart() {
-        try {
+    public Part createPart()
+    {
+        try
+        {
             throw new Exception(" Attempt to create an AudiPart");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } // TODO Auto-generated method stub

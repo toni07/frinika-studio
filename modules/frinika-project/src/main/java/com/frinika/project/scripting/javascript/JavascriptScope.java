@@ -36,17 +36,7 @@ import com.frinika.sequencer.gui.transport.RecordAction;
 import com.frinika.sequencer.gui.transport.RewindAction;
 import com.frinika.sequencer.gui.transport.StartAction;
 import com.frinika.sequencer.gui.transport.StopAction;
-import com.frinika.sequencer.model.AudioLane;
-import com.frinika.sequencer.model.AudioPart;
-import com.frinika.sequencer.model.ControllerEvent;
-import com.frinika.sequencer.model.Ghost;
-import com.frinika.sequencer.model.MidiLane;
-import com.frinika.sequencer.model.MidiPart;
-import com.frinika.sequencer.model.MultiEvent;
-import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.model.SysexEvent;
-import com.frinika.sequencer.model.TextLane;
-import com.frinika.sequencer.model.TextPart;
+import com.frinika.sequencer.model.*;
 import com.frinika.sequencer.model.util.TimeUtils;
 import java.io.File;
 import java.io.FileReader;
@@ -1003,7 +993,12 @@ public class JavascriptScope extends ScriptableObject {
                 type = TYPE_AUDIO;
             } else if (l instanceof TextLane) {
                 type = TYPE_TEXT;
-            } else {
+            }
+            else if (l instanceof TriggerSoundTrack)
+            {
+                type = TYPE_TRIGGER_SOUND;
+            }
+            else {
                 type = TYPE_UNKNOWN;
             }
         }

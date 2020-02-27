@@ -84,9 +84,12 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         this.selectedColor = Color.PINK;
 
         this.project = project;
-        if (lane instanceof MidiLane) {
+        if (lane instanceof MidiLane)
+        {
             voiceView = new MidiVoiceView((MidiLane) lane, project);
-        } else if (lane instanceof AudioLane) {
+        }
+        else if (lane instanceof AudioLane)
+        {
             voiceView = new AudioLaneView((AudioLane) lane);
             AudioLane al = ((AudioLane) lane);
             al.getMixerControls().getSoloControl().addObserver(this);
@@ -179,8 +182,8 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         voice.setBorder(BorderFactory.createEmptyBorder(3, 2, 3, 2));
         this.voice.setMargin(insets);
 
-        this.voice.setToolTipText("Click to select this lane");
-        setToolTipText("Click to select this lane");
+        this.voice.setToolTipText("Click to select this lane (toni07 2)");
+        setToolTipText("Click to select this lane (toni07 3)");
 
         this.voice.addActionListener(new ActionListener() {
 
@@ -357,6 +360,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
+                    //TODO toni07: see how we can play another sound for trigger tracks
                     RecordableLane rl = (RecordableLane) lane;
                     rl.setRecording(!rl.isRecording());
                     if (notify) {

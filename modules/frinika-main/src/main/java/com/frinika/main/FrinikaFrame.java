@@ -884,6 +884,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         createView(TRACKS_VIEW, CurrentLocale.getMessage("project.maintabs.tracks"),
                 partViewEditor, DOCKICON_TRACKS);
+
         createView(VOICE_VIEW, CurrentLocale.getMessage("project.maintabs.lane_properties"), laneView, DOCKICON_VOICE);
         createView(PIANOROLL_VIEW, CurrentLocale.getMessage("project.maintabs.piano_roll"), pianoControllerPane,
                 DOCKICON_PIANOROLL);

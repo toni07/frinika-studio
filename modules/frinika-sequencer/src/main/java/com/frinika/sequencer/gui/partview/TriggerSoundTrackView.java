@@ -42,14 +42,14 @@ public class TriggerSoundTrackView extends LaneView
 {
     private static final Logger logger = Logger.getLogger(TriggerSoundTrackView.class.getName());
     AudioProcess audioIn;
-    String name = "... Choose input ...";
+    String name = "... Choose T input ...";
 
     public TriggerSoundTrackView(TriggerSoundTrack track) {
         super(track);
         init();
     }
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1342134543L;
 
     @Override
     protected void makeButtons() {
@@ -64,49 +64,43 @@ public class TriggerSoundTrackView extends LaneView
     }
 
     PopupSelectorButton createDeviceSelector() {
-        audioIn = ((AudioLane) lane).getAudioInDevice();
+        audioIn = ((TriggerSoundTrack) lane).getAudioInDevice();
 
         // Device selector
         // ------------------------------------------------------------------------------------
         final FrinikaAudioServer currentlyRunningAudioServer = FrinikaAudioSystem.getAudioServer();
-        ListProvider resource = new ListProvider() {
-            @Override
-            public Object[] getList() {
-                // TODO connections setup
+        ListProvider resource = () -> {
+            // TODO connections setup
 //				Vector<AudioDeviceHandle> vec = AudioHub.getAudioInHandles();
 //				AudioDeviceHandle list[] = new AudioDeviceHandle[vec.size()];
 //				list=vec.toArray(list);
-                logger.log(Level.INFO, "Currently running audio server: ", currentlyRunningAudioServer);
-                List<String> vec = currentlyRunningAudioServer.getAvailableInputNames();
-                logger.log(Level.INFO, "Available audio inputs: ", vec);
-                String list[] = new String[vec.size()];
-                list = vec.toArray(list);
+            logger.log(Level.INFO, "Currently running audio server: ", currentlyRunningAudioServer);
+            List<String> vec = currentlyRunningAudioServer.getAvailableInputNames();
+            logger.log(Level.INFO, "Available audio inputs: ", vec);
+            String list[] = new String[vec.size()];
+            list = vec.toArray(list);
 
-                //	int ii=0;
-                //	for (AudioDeviceHandle h:vec) {
-                //		list[ii++]=h;
-                //	}
-                return list;
-            }
+            //	int ii=0;
+            //	for (AudioDeviceHandle h:vec) {
+            //		list[ii++]=h;
+            //	}
+            return list;
         };
 
-        PopupClient client = new PopupClient() {
-            @Override
-            public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
-                AudioProcess in;
-                try {
-                    in = currentlyRunningAudioServer.openAudioInput((String) o, null);
-                    ((AudioLane) lane).setAudioInDevice(in);
-                    name = (String) o;
-                    if (in != audioIn) {
-                        init();
-                    }
+        PopupClient client = (but, o, cnt) -> {
+            AudioProcess in;
+            try {
+                in = currentlyRunningAudioServer.openAudioInput((String) o, null);
+                ((TriggerSoundTrack) lane).setAudioInDevice(in);
+                name = (String) o;
+                if (in != audioIn) {
+                    init();
+                }
 
-                }
-                catch (Exception e)
-                {
-                    logger.log(Level.SEVERE, "Error: ", e);
-                }
+            }
+            catch (Exception e)
+            {
+                logger.log(Level.SEVERE, "Error: ", e);
             }
         };
 
